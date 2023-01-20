@@ -1,0 +1,19 @@
+name: test
+
+on:
+  release:
+    types: [ released ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set version to env
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          echo "version is $VERSION"
+
+      - name: Release ${{ format('version is {0}', env.VERSION) }}
+        run: echo Hello, world!
