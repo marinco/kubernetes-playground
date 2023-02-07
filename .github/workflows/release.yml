@@ -18,6 +18,13 @@ jobs:
       - name: Set release version to environment
         run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
+      - name: Write environment values to project.properties
+        run: |
+          sed -i "/PLUGIN=/ s/=.*/=${{ env.PLUGIN }}/" project.properties
+          sed -i "/VERSION=/ s/=.*/=${{ env.VERSION }}/" project.properties
+          sed -i "/REGISTRY_URL=/ s/=.*/=${{ env.REGISTRY_URL }}/" project.properties
+          sed -i "/REGISTRY_ORG=/ s/=.*/=${{ env.REGISTRY_ORG }}/" project.properties
+
       - name: Build jar file
         run: sh build.sh
 
