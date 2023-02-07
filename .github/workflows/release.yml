@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  release:
+    types: [ released ]
+
+jobs:
+  release:
+    name: Release new plugin version
+    runs-on: ubuntu-latest
+    env:
+      PLUGIN: test
+      REGISTRY_URL: ghcr.io
+      REGISTRY_ORG: marinco
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set release version to environment
+        run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Build jar file
+        run: sh build.sh
+
+      - name: Publish to Nexus
+        uses: sonatype-nexus-community/nexus-repo-github-action@1.0.0
+        with:
+          serverUrl: https://nexus.xebialabs.com/nexus
+          username: ${{ secrets.NEXUS_CI_USER }}
+          password: ${{ secrets.NEXUS_CI_USER_PWD }}
+          format: maven2
+          repository: community
+          coordinates: groupId=com.xebialabs.xlrelease.plugins artifactId=${{ env.PLUGIN }} version=${{ env.VERSION }}
+          assets: extension=jar
+          filename: ${{ format('build/{0}-{1}.jar', env.PLUGIN, env.VERSION) }}
+
+
+      - name: Log in to Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY_URL }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.XEBIALABS_CI_USER_REPO }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          build-args: GITHUB_PAT=${{ secrets.XEBIALABS_CI_USER_REPO }}
+          tags: ${{ format('{0}/{1}/{2}:{3}', env.REGISTRY_URL, env.REGISTRY_ORG, env.PLUGIN, env.VERSION) }}
