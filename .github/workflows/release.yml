@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.NEXUS_CI_USER }}
           password: ${{ secrets.NEXUS_CI_USER_PWD }}
           format: maven2
-          repository: community
+          repository: Community
           coordinates: groupId=com.xebialabs.xlrelease.plugins artifactId=${{ env.PLUGIN }} version=${{ env.VERSION }}
           assets: extension=jar
           filename: ${{ format('build/{0}-{1}.jar', env.PLUGIN, env.VERSION) }}
