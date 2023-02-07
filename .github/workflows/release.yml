@@ -31,10 +31,10 @@ jobs:
       - name: Publish to Nexus
         uses: sonatype-nexus-community/nexus-repo-github-action@1.0.0
         with:
-          serverUrl: https://nexus.xebialabs.com
+          serverUrl: https://nexus.xebialabs.com/nexus
           username: ${{ secrets.NEXUS_CI_USER }}
           password: ${{ secrets.NEXUS_CI_USER_PWD }}
-          format: maven2
+          format: raw
           repository: Community
           coordinates: groupId=com.xebialabs.xlrelease.plugins artifactId=${{ env.PLUGIN }} version=${{ env.VERSION }}
           assets: extension=jar
