@@ -31,7 +31,7 @@ jobs:
       - name: Publish to Nexus
         uses: sonatype-nexus-community/nexus-repo-github-action@1.0.0
         with:
-          serverUrl: https://nexus.xebialabs.com/nexus
+          serverUrl: https://nexus.xebialabs.com
           username: ${{ secrets.NEXUS_CI_USER }}
           password: ${{ secrets.NEXUS_CI_USER_PWD }}
           format: maven2
