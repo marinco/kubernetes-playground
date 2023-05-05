@@ -1,0 +1,16 @@
+name: Bump version and push tag
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Project
+        env: 
+          super_secret: ${{ secrets.MY_SECRET }}
+        if: ${{ env.super_secret == '' }}
+        run: 'echo "echo the secret \"MY_SECRET\" has not been made; echo please go to \"settings \> secrets \> actions\" to create it"'
